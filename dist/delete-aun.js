@@ -35,34 +35,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var algosdk_1 = require("algosdk");
-var get_names_1 = require("./get-names");
-var delete_aun_1 = require("./delete-aun");
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var account, aunNames, aunAccountAddress, error_1;
+exports.deleteAun = void 0;
+var algosdk_1 = __importDefault(require("algosdk"));
+var env_1 = require("./env");
+var deleteAun = function (name, account) { return __awaiter(void 0, void 0, void 0, function () {
+    var atc, sender, args, delete_aun, box_key, boxes, params, myaccountSigner, application_call, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
-                account = (0, algosdk_1.mnemonicToSecretKey)("topple cruel neutral rose glory glad prevent output box snap notice child actor poem forget ship luxury vanish tank mention cloth rally sheriff abstract alert");
-                return [4 /*yield*/, (0, delete_aun_1.deleteAun)("new naame 2", account)];
+                atc = new algosdk_1.default.AtomicTransactionComposer();
+                sender = account.addr;
+                args = [];
+                delete_aun = "delete_aun";
+                box_key = name;
+                boxes = [{ appIndex: env_1.APP_ID, name: new Uint8Array(Buffer.from(box_key)) }];
+                args.push(new Uint8Array(Buffer.from(delete_aun)));
+                args.push(new Uint8Array(Buffer.from(box_key)));
+                _a.label = 1;
             case 1:
-                _a.sent();
-                return [4 /*yield*/, (0, get_names_1.getAunNames)()];
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, env_1.algodClient.getTransactionParams().do()];
             case 2:
-                aunNames = _a.sent();
-                console.log(aunNames);
-                return [4 /*yield*/, (0, get_names_1.getAunAccountAddress)("freddys wallet")];
+                params = _a.sent();
+                // create a transaction to add
+                console.log("Deleting name");
+                myaccountSigner = algosdk_1.default.makeBasicAccountTransactionSigner(account);
+                application_call = algosdk_1.default.makeApplicationNoOpTxnFromObject({
+                    from: sender,
+                    suggestedParams: params,
+                    appIndex: env_1.APP_ID,
+                    appArgs: args,
+                    boxes: boxes,
+                });
+                atc.addTransaction({ txn: application_call, signer: myaccountSigner });
+                return [4 /*yield*/, atc.execute(env_1.algodClient, 2)];
             case 3:
-                aunAccountAddress = _a.sent();
-                console.log(aunAccountAddress);
+                _a.sent();
+                console.log("Successfully deleted name " + box_key + "belonging to: " + sender);
                 return [3 /*break*/, 5];
             case 4:
-                error_1 = _a.sent();
-                console.error("Error fetching data:", error_1);
+                err_1 = _a.sent();
+                console.error("Name deletion failed!", err_1);
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
         }
     });
-}); })();
+}); };
+exports.deleteAun = deleteAun;

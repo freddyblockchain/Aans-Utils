@@ -1,5 +1,6 @@
 import algosdk from "algosdk";
 import { APPLICATION_ADDRESS, APP_ID, algodClient } from "./env";
+import { getAunNames } from "./get-names";
 
 const PRICE_PER_BOX = 2500
 const BOX_MULTIPLIER = 400
@@ -8,12 +9,18 @@ const calculateBoxCost = (key_length:number, value_length: number): number => {
 }
 
 export const createAun = async (name: string,  account: algosdk.Account) => {
+    let currentNames = await getAunNames()
+    console.log(currentNames)
+    if(currentNames && currentNames.includes(name)){
+      throw new Error("Name already belongs to someone");
+    }
+
     let index = APP_ID;
     let sender = account.addr;
     
     let args:Uint8Array[] = [];
     let create_aun = "create_aun";
-    let box_key = "freddys wallet 2";
+    let box_key = name;
     let boxes = [{ appIndex: index, name: new Uint8Array(Buffer.from(box_key)) }];
     
     args.push(new Uint8Array(Buffer.from(create_aun)));
@@ -45,7 +52,6 @@ export const createAun = async (name: string,  account: algosdk.Account) => {
     
         console.log("Successfully created name " + box_key + "beloning to: " + sender);
       } catch (err) {
-        console.error("Tests failed!", err);
-        process.exit(1);
+        console.error("Name creation failed!", err);
       }
     }

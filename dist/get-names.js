@@ -36,33 +36,66 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAunAccountAddress = exports.getAunNames = void 0;
 var algosdk_1 = require("algosdk");
-var get_names_1 = require("./get-names");
-var delete_aun_1 = require("./delete-aun");
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var account, aunNames, aunAccountAddress, error_1;
+var env_1 = require("./env");
+function uint8ArrayToBase64(bytes) {
+    var binary = '';
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    if (typeof window !== "undefined" && window.btoa) {
+        // For browsers
+        return window.btoa(binary);
+    }
+    else {
+        // For Node.js
+        return Buffer.from(binary, 'binary').toString('base64');
+    }
+}
+function decodeUint8(bytes) {
+    return Buffer.from(uint8ArrayToBase64(bytes), "base64");
+}
+var getAunNames = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var boxesRequest, boxes, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
-                account = (0, algosdk_1.mnemonicToSecretKey)("topple cruel neutral rose glory glad prevent output box snap notice child actor poem forget ship luxury vanish tank mention cloth rally sheriff abstract alert");
-                return [4 /*yield*/, (0, delete_aun_1.deleteAun)("new naame 2", account)];
+                _a.trys.push([0, 2, , 3]);
+                boxesRequest = env_1.algodClient.getApplicationBoxes(env_1.APP_ID);
+                return [4 /*yield*/, boxesRequest.do()];
             case 1:
-                _a.sent();
-                return [4 /*yield*/, (0, get_names_1.getAunNames)()];
+                boxes = (_a.sent()).boxes;
+                return [2 /*return*/, boxes.map(function (element) {
+                        return decodeUint8(element.name).toString();
+                    })];
             case 2:
-                aunNames = _a.sent();
-                console.log(aunNames);
-                return [4 /*yield*/, (0, get_names_1.getAunAccountAddress)("freddys wallet")];
-            case 3:
-                aunAccountAddress = _a.sent();
-                console.log(aunAccountAddress);
-                return [3 /*break*/, 5];
-            case 4:
-                error_1 = _a.sent();
-                console.error("Error fetching data:", error_1);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                err_1 = _a.sent();
+                console.log("names not found");
+                return [2 /*return*/, undefined];
+            case 3: return [2 /*return*/];
         }
     });
-}); })();
+}); };
+exports.getAunNames = getAunNames;
+var getAunAccountAddress = function (aunName) { return __awaiter(void 0, void 0, void 0, function () {
+    var boxesRequest, boxes, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                boxesRequest = env_1.algodClient.getApplicationBoxByName(env_1.APP_ID, Buffer.from(aunName));
+                return [4 /*yield*/, boxesRequest.do()];
+            case 1:
+                boxes = (_a.sent());
+                return [2 /*return*/, (0, algosdk_1.encodeAddress)(boxes.value)];
+            case 2:
+                err_2 = _a.sent();
+                console.log("No account found paired with that name");
+                return [2 /*return*/, undefined];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getAunAccountAddress = getAunAccountAddress;
