@@ -2,9 +2,9 @@ import algosdk from "algosdk";
 import { APP_ID, algodClient } from "./env";
 
 
-export const deleteAun = async (name: string,  account: algosdk.Account) => {
+export const deleteAun = async (name: string,  signingAddress: string) => {
   const atc = new algosdk.AtomicTransactionComposer();
-  const sender = account.addr
+  const sender = signingAddress
 
   let args = [];
   let delete_aun = "delete_aun";
@@ -16,9 +16,6 @@ export const deleteAun = async (name: string,  account: algosdk.Account) => {
 
   try {
     let params = await algodClient.getTransactionParams().do();
-    // create a transaction to add
-    console.log("Deleting name");
-    let myaccountSigner = algosdk.makeBasicAccountTransactionSigner(account);
     let application_call = algosdk.makeApplicationNoOpTxnFromObject({
       from: sender,
       suggestedParams: params,
@@ -26,12 +23,9 @@ export const deleteAun = async (name: string,  account: algosdk.Account) => {
       appArgs: args,
       boxes: boxes,
     });
-    atc.addTransaction({ txn: application_call, signer: myaccountSigner });
-
-    await atc.execute(algodClient, 2);
-
-    console.log("Successfully deleted name " + box_key + "belonging to: " + sender);
+    const transactions = [{txn: application_call, signers: [signingAddress]}]
+    return transactions
   } catch (err) {
-    console.error("Name deletion failed!", err);
+    console.error("Creation of delete aun failed", err);
   }
 }

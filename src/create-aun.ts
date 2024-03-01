@@ -8,7 +8,7 @@ const calculateBoxCost = (key_length:number, value_length: number): number => {
      return PRICE_PER_BOX + (BOX_MULTIPLIER * (key_length + value_length))
 }
 
-export const createAun = async (name: string,  account: algosdk.Account) => {
+export const createAunTransaction = async (name: string,  signingAddress: algosdk.Account) => {
     let currentNames = await getAunNames()
     console.log(currentNames)
     if(currentNames && currentNames.includes(name)){
@@ -16,7 +16,7 @@ export const createAun = async (name: string,  account: algosdk.Account) => {
     }
 
     let index = APP_ID;
-    let sender = account.addr;
+    let sender = signingAddress.addr;
     
     let args:Uint8Array[] = [];
     let create_aun = "create_aun";
@@ -29,9 +29,6 @@ export const createAun = async (name: string,  account: algosdk.Account) => {
     const atc = new algosdk.AtomicTransactionComposer();
       try {
         let params = await algodClient.getTransactionParams().do();
-        // create a transaction to add
-        console.log("Trying to create name");
-        let myAccountSigner = algosdk.makeBasicAccountTransactionSigner(account);
         let payment = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
           from: sender,
           suggestedParams: params,
@@ -45,13 +42,10 @@ export const createAun = async (name: string,  account: algosdk.Account) => {
           appArgs: args,
           boxes: boxes,
         });
-        atc.addTransaction({ txn: payment, signer: myAccountSigner });
-        atc.addTransaction({ txn: application_call, signer: myAccountSigner });
+        const transactions = [{txn: payment, signers: [signingAddress]}, {txn: application_call, signers: [signingAddress]}]
+        return transactions
     
-        await atc.execute(algodClient, 2);
-    
-        console.log("Successfully created name " + box_key + "beloning to: " + sender);
       } catch (err) {
-        console.error("Name creation failed!", err);
+        console.error("Creation of create aun failed", err);
       }
     }
