@@ -1,9 +1,7 @@
 
 import algosdk, { mnemonicToSecretKey } from 'algosdk';
-import { createAun } from './create-aun';
 import { getAunAccountAddress, getAunNames} from './get-names';
-import { deleteAun } from './delete-aun';
-
+/*
 (async () => {
     try {
         
@@ -20,3 +18,4 @@ import { deleteAun } from './delete-aun';
       console.error("Error fetching data:", error);
     }
   })();
+*/

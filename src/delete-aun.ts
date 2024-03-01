@@ -1,8 +1,8 @@
-import algosdk from "algosdk";
+import algosdk, { assignGroupID } from "algosdk";
 import { APP_ID, algodClient } from "./env";
 
 
-export const deleteAun = async (name: string,  signingAddress: string) => {
+export const deleteAunTransaction = async (name: string,  signingAddress: string) => {
   const atc = new algosdk.AtomicTransactionComposer();
   const sender = signingAddress
 
@@ -23,6 +23,7 @@ export const deleteAun = async (name: string,  signingAddress: string) => {
       appArgs: args,
       boxes: boxes,
     });
+    assignGroupID([application_call])
     const transactions = [{txn: application_call, signers: [signingAddress]}]
     return transactions
   } catch (err) {

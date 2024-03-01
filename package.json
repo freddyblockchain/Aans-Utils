@@ -1,9 +1,9 @@
 {
   "name": "@freddyblockchain/auns-utils",
-  "version": "1.1.0",
+  "version": "1.14.0",
   "description": "This package is made to give useful tools to use the algorand username service",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"

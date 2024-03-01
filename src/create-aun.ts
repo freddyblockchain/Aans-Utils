@@ -1,4 +1,4 @@
-import algosdk from "algosdk";
+import algosdk, { assignGroupID } from "algosdk";
 import { APPLICATION_ADDRESS, APP_ID, algodClient } from "./env";
 import { getAunNames } from "./get-names";
 
@@ -8,15 +8,14 @@ const calculateBoxCost = (key_length:number, value_length: number): number => {
      return PRICE_PER_BOX + (BOX_MULTIPLIER * (key_length + value_length))
 }
 
-export const createAunTransaction = async (name: string,  signingAddress: algosdk.Account) => {
+export const createAunTransaction = async (name: string,  signingAddress: string) => {
     let currentNames = await getAunNames()
-    console.log(currentNames)
     if(currentNames && currentNames.includes(name)){
       throw new Error("Name already belongs to someone");
     }
 
     let index = APP_ID;
-    let sender = signingAddress.addr;
+    let sender = signingAddress;
     
     let args:Uint8Array[] = [];
     let create_aun = "create_aun";
@@ -42,6 +41,7 @@ export const createAunTransaction = async (name: string,  signingAddress: algosd
           appArgs: args,
           boxes: boxes,
         });
+        assignGroupID([payment,application_call])
         const transactions = [{txn: payment, signers: [signingAddress]}, {txn: application_call, signers: [signingAddress]}]
         return transactions
     

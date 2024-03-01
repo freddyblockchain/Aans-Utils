@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,12 +58,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createAun = void 0;
-var algosdk_1 = __importDefault(require("algosdk"));
+exports.createAunTransaction = void 0;
+var algosdk_1 = __importStar(require("algosdk"));
 var env_1 = require("./env");
 var get_names_1 = require("./get-names");
 var PRICE_PER_BOX = 2500;
@@ -48,19 +68,18 @@ var BOX_MULTIPLIER = 400;
 var calculateBoxCost = function (key_length, value_length) {
     return PRICE_PER_BOX + (BOX_MULTIPLIER * (key_length + value_length));
 };
-var createAun = function (name, account) { return __awaiter(void 0, void 0, void 0, function () {
-    var currentNames, index, sender, args, create_aun, box_key, boxes, atc, params, myAccountSigner, payment, application_call, err_1;
+var createAunTransaction = function (name, signingAddress) { return __awaiter(void 0, void 0, void 0, function () {
+    var currentNames, index, sender, args, create_aun, box_key, boxes, atc, params, payment, application_call, transactions, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, get_names_1.getAunNames)()];
             case 1:
                 currentNames = _a.sent();
-                console.log(currentNames);
                 if (currentNames && currentNames.includes(name)) {
                     throw new Error("Name already belongs to someone");
                 }
                 index = env_1.APP_ID;
-                sender = account.addr;
+                sender = signingAddress;
                 args = [];
                 create_aun = "create_aun";
                 box_key = name;
@@ -70,13 +89,10 @@ var createAun = function (name, account) { return __awaiter(void 0, void 0, void
                 atc = new algosdk_1.default.AtomicTransactionComposer();
                 _a.label = 2;
             case 2:
-                _a.trys.push([2, 5, , 6]);
+                _a.trys.push([2, 4, , 5]);
                 return [4 /*yield*/, env_1.algodClient.getTransactionParams().do()];
             case 3:
                 params = _a.sent();
-                // create a transaction to add
-                console.log("Trying to create name");
-                myAccountSigner = algosdk_1.default.makeBasicAccountTransactionSigner(account);
                 payment = algosdk_1.default.makePaymentTxnWithSuggestedParamsFromObject({
                     from: sender,
                     suggestedParams: params,
@@ -90,19 +106,15 @@ var createAun = function (name, account) { return __awaiter(void 0, void 0, void
                     appArgs: args,
                     boxes: boxes,
                 });
-                atc.addTransaction({ txn: payment, signer: myAccountSigner });
-                atc.addTransaction({ txn: application_call, signer: myAccountSigner });
-                return [4 /*yield*/, atc.execute(env_1.algodClient, 2)];
+                (0, algosdk_1.assignGroupID)([payment, application_call]);
+                transactions = [{ txn: payment, signers: [signingAddress] }, { txn: application_call, signers: [signingAddress] }];
+                return [2 /*return*/, transactions];
             case 4:
-                _a.sent();
-                console.log("Successfully created name " + box_key + "beloning to: " + sender);
-                return [3 /*break*/, 6];
-            case 5:
                 err_1 = _a.sent();
-                console.error("Name creation failed!", err_1);
-                return [3 /*break*/, 6];
-            case 6: return [2 /*return*/];
+                console.error("Creation of create aun failed", err_1);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
-exports.createAun = createAun;
+exports.createAunTransaction = createAunTransaction;
