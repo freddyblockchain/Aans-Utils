@@ -1,21 +1,17 @@
 
 import algosdk, { mnemonicToSecretKey } from 'algosdk';
-import { getAunAccountAddress, getAunNames} from './get-names';
-/*
+import { getAanAccountAddress, getAanNames } from './get-names';
+import { createAanTransaction } from '..';
+
 (async () => {
     try {
         
-      let account = mnemonicToSecretKey("topple cruel neutral rose glory glad prevent output box snap notice child actor poem forget ship luxury vanish tank mention cloth rally sheriff abstract alert")
-
-      await deleteAun("new naame 2", account) 
-    
-      const aunNames = await getAunNames();
-      console.log(aunNames);
+      const aanNames = await getAanNames();
+      console.log("names: " + aanNames);
   
-      const aunAccountAddress = await getAunAccountAddress("freddys wallet");
-      console.log(aunAccountAddress);
+      const aanAccountAddress = await getAanAccountAddress("aebfgoaebfgoaebfgoaebfgoaeb");
+      console.log("found account: " + aanAccountAddress);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   })();
-*/

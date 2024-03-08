@@ -1,6 +1,6 @@
 {
-  "name": "@freddyblockchain/auns-utils",
-  "version": "1.14.0",
+  "name": "@freddyblockchain/aans-utils",
+  "version": "1.15.0",
   "description": "This package is made to give useful tools to use the algorand username service",
   "main": "dist/index.js",
   "types": "index.d.ts",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/freddyblockchain/Auns-Utils.git"
+    "url": "git+https://github.com/freddyblockchain/aans-Utils.git"
   },
   "author": "freddyblockchain",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/freddyblockchain/Auns-Utils/issues"
+    "url": "https://github.com/freddyblockchain/aans-Utils/issues"
   },
-  "homepage": "https://github.com/freddyblockchain/Auns-Utils#readme",
+  "homepage": "https://github.com/freddyblockchain/aans-Utils#readme",
   "devDependencies": {
     "@types/node": "^20.11.20",
     "ts-node": "^10.9.2",

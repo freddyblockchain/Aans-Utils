@@ -5,10 +5,8 @@ export interface SignerTransaction {
     signers?: string[];
 }
 
-export function createAunTransaction(name: string, signingAddress: string): Promise<SignerTransaction[]>;
+export function createAanTransaction(name: string, signingAddress: string): Promise<SignerTransaction[]>;
 
-export function deleteAunTransaction(name: string, signingAddress: string): Promise<SignerTransaction[]>;
+export function getAanAccountAddress(aanName: string): Promise<string | undefined>;
 
-export function getAunAccountAddress(aunName: string): Promise<string | undefined>;
-
-export function getAunNames(): Promise<string[] | undefined>;
+export function getAanNames(): Promise<string[] | undefined>;

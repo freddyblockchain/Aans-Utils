@@ -1,17 +1,17 @@
-import algosdk, { assignGroupID } from "algosdk";
+/*import algosdk, { assignGroupID } from "algosdk";
 import { APP_ID, algodClient } from "./env";
 
 
-export const deleteAunTransaction = async (name: string,  signingAddress: string) => {
+export const deleteaanTransaction = async (name: string,  signingAddress: string) => {
   const atc = new algosdk.AtomicTransactionComposer();
   const sender = signingAddress
 
   let args = [];
-  let delete_aun = "delete_aun";
+  let delete_aan = "delete_aan";
   let box_key = name;
   let boxes = [{ appIndex: APP_ID, name: new Uint8Array(Buffer.from(box_key)) }];
 
-  args.push(new Uint8Array(Buffer.from(delete_aun)));
+  args.push(new Uint8Array(Buffer.from(delete_aan)));
   args.push(new Uint8Array(Buffer.from(box_key)));
 
   try {
@@ -27,6 +27,6 @@ export const deleteAunTransaction = async (name: string,  signingAddress: string
     const transactions = [{txn: application_call, signers: [signingAddress]}]
     return transactions
   } catch (err) {
-    console.error("Creation of delete aun failed", err);
+    console.error("Creation of delete aan failed", err);
   }
-}
+}*/
