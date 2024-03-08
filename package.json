@@ -1,6 +1,6 @@
 {
   "name": "@freddyblockchain/aans-utils",
-  "version": "1.15.0",
+  "version": "1.16.0",
   "description": "This package is made to give useful tools to use the algorand username service",
   "main": "dist/index.js",
   "types": "index.d.ts",
